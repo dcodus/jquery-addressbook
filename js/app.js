@@ -30,25 +30,26 @@ function getEntry(entryId) {
 
 
 // Functions that display things on the screen (views)
-function displayAddressBooksList() {
-    getAddressBooks().then(
-        function(addressBooks) {
+// function displayAddressBooksList() {
+//     getAddressBooks().then(
+//         function(addressBooks) {
             
-            $app.html(''); // Clear the #app div
-            $app.append('<h2>Address Books List</h2>');
-            $app.append('<ul>');
+//             $app.html(''); // Clear the #app div
+//             $app.append('<h2>Address Books List</h2>');
+//             $app.append('<ul>');
             
-            addressBooks.forEach(function(ab) {
-                $app.find('ul').append('<li data-id="' + ab.id + '">' + ab.name + '</li>');
-            });
+//             addressBooks.forEach(function(ab) {
+//                 $app.find('ul').append('<li data-id="' + ab.id + '">' + ab.name + '</li>');
+//             });
             
-            $app.find('li').on('click', function() {
-                var addressBookId = $(this).data('id');
-                displayAddressBook(addressBookId);
-            });
-        }
-    )
-}
+//             $app.find('li').on('click', function() {
+//                 var addressBookId = $(this).data('id');
+//                 //This function shound create new html showing the addressbook.
+//                 displayAddressBook(addressBookId);
+//             });
+//         }
+//     )
+// }
 
 function displayAddressBook(addressBookId) {
     
