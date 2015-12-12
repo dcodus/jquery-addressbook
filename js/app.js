@@ -27,6 +27,35 @@ function getEntry(entryId) {
 // End data retrieval functions
 
 
+var result = [];
+
+$('#books').click(function (e) {
+    e.preventDefault();
+    $('.app__contentLeft').find('ul').remove();
+    $('.app__contentLeft').append('<ul></ul>');
+    getAddressBooks().then(function (res) {
+        result=res;
+        res.forEach(function (book) {
+            $('.app__contentLeft').find('ul').append('<li data-id="'+book.id+'">'+book.name+'</li>');
+            $('.app__contentLeft').find('li').addClass('listBooks');
+        })
+    })
+})
+
+$('input[name="search-bar"]').keyup(function () {
+   var test = $(this).val();
+   $('.app__contentLeft').find('ul').empty();
+   result.forEach(function(book) {
+       if(book.name.indexOf(test) > -1){
+          $('.app__contentLeft').find('ul').append('<li>'+book.name+'</li>');
+       }
+   })
+   
+})
+
+$(document).on('click', '.listBooks', function() {
+    console.log($(this).data('id'));
+})
 
 
 // Functions that display things on the screen (views)
@@ -67,4 +96,4 @@ function displayEntry() {
 // Start the app by displaying all the addressbooks
 // NOTE: This line is very important! So far, our code has only defined functions! This line calls the
 // function that displays the list of address books, effectively initializing our UI.
-displayAddressBooksList();
+// displayAddressBooksList();

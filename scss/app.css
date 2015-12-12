@@ -57,7 +57,8 @@ table {
 .app {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  width: 700px; }
   .app__rightSide {
     display: flex;
     width: 50%;
@@ -77,6 +78,47 @@ table {
     align-items: center; }
     .app__leftSide input[name="search-bar"] {
       font-family: "FontAwesome"; }
+    .app__leftSide .leftButtons {
+      width: 32px;
+      height: 32px;
+      margin-right: 5px;
+      display: inline-block; }
+    .app__leftSide #tits {
+      align-self: flex-end;
+      margin-top: auto; }
+    .app__leftSide #books {
+      background-image: url("../img/books.png");
+      margin: 0;
+      padding: 0;
+      transition: all 0.1s ease-in-out; }
+      .app__leftSide #books:hover {
+        transform: scale(1.1);
+        cursor: pointer; }
+      .app__leftSide #books:active {
+        transform: rotate(8deg); }
+    .app__leftSide #contacts {
+      background-image: url("../img/contacts.png");
+      margin: 0;
+      padding: 0;
+      transition: all 0.1s ease-in-out; }
+      .app__leftSide #contacts:hover {
+        transform: scale(1.1);
+        cursor: pointer; }
+      .app__leftSide #contacts:active {
+        transform: rotate(8deg); }
+    .app__leftSide .listBooks {
+      background: tomato;
+      padding: 5px 10px;
+      margin: 3px;
+      color: #fff;
+      text-shadow: 2px 2px #666;
+      border-radius: 5px;
+      transition: all 0.1s ease-in-out; }
+      .app__leftSide .listBooks:hover {
+        background: #EE6347;
+        cursor: pointer; }
+      .app__leftSide .listBooks:active {
+        transform: scale(0.97); }
   .app h1 {
     flex-grow: 1;
     text-align: center;
@@ -87,7 +129,8 @@ table {
       color: #ED1B2E; }
   .app__contentRight {
     padding: 10px;
-    line-height: 1.4em; }
+    line-height: 1.4em;
+    border: 1px solid brown; }
   .app__contentLeft {
     border: 1px solid black;
     overflow: auto;
