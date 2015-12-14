@@ -28,64 +28,48 @@ function getEntry(entryId) {
 
 
 var result = [];
-
-$('#books').click(function (e) {
-    e.preventDefault();
+$('#books').click(function() {
     $('.app__contentLeft').find('ul').remove();
     $('.app__contentLeft').append('<ul></ul>');
-    getAddressBooks().then(function (res) {
-        result=res;
-        res.forEach(function (book) {
-            $('.app__contentLeft').find('ul').append('<li data-id="'+book.id+'">'+book.name+'</li>');
-            $('.app__contentLeft').find('li').addClass('listBooks');
+    getAddressBooks().then(function(res) {
+        result = res;
+        result = result.sort(function(a, b) {
+            if(a.name.toLowerCase() < b.name.toLowerCase()){
+                return -1
+            } else if(a.name.toLowerCase() > b.name.toLowerCase()){
+                return 1
+            } else {
+                return 0
+            }
+        })
+        result.forEach(function(book) {
+            $('.app__contentLeft').find('ul').append('<li class="listBooks" data-id="' + book.id + '">' + book.name + '</li>');
         })
     })
 })
+$('input[name="search-bar"]').on('keyup', function() {
+    var search = $(this).val().toLowerCase();
+    $('.app__contentLeft').find('ul').empty();
+    result.forEach(function(book) {
+        var lowerCase = book.name.toLowerCase();
+        if (lowerCase.indexOf(search) > -1) {
+            $('.app__contentLeft').find('ul').append('<li class="listBooks" data-id="' + book.id + '">' + book.name + '</li>');
+        }
+    })
+});
 
-$('input[name="search-bar"]').keyup(function () {
-   var test = $(this).val();
-   $('.app__contentLeft').find('ul').empty();
-   result.forEach(function(book) {
-       if(book.name.indexOf(test) > -1){
-          $('.app__contentLeft').find('ul').append('<li>'+book.name+'</li>');
-       }
-   })
-   
-})
 
 $(document).on('click', '.listBooks', function() {
     console.log($(this).data('id'));
 })
 
 
-// Functions that display things on the screen (views)
-// function displayAddressBooksList() {
-//     getAddressBooks().then(
-//         function(addressBooks) {
-            
-//             $app.html(''); // Clear the #app div
-//             $app.append('<h2>Address Books List</h2>');
-//             $app.append('<ul>');
-            
-//             addressBooks.forEach(function(ab) {
-//                 $app.find('ul').append('<li data-id="' + ab.id + '">' + ab.name + '</li>');
-//             });
-            
-//             $app.find('li').on('click', function() {
-//                 var addressBookId = $(this).data('id');
-//                 //This function shound create new html showing the addressbook.
-//                 displayAddressBook(addressBookId);
-//             });
-//         }
-//     )
-// }
-
 function displayAddressBook(addressBookId) {
-    
+
 }
 
 function displayEntry() {
-    
+
 }
 // End functions that display views
 
