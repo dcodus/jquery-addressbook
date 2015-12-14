@@ -6,7 +6,6 @@ $main_color: #ED1B2E;
     display: flex;
     justify-content: center;
     padding-top: 50px;
-    
 }
 .app {
     display: flex;
@@ -17,10 +16,9 @@ $main_color: #ED1B2E;
         display: flex;
         width: 50%;
         border: 1px solid red;
-        height: 400px;
+        height: 420px;
         padding: 10px;
         justify-content: center;
-        align-items: center;
     }
     &__leftSide {
         display: flex;
@@ -28,7 +26,7 @@ $main_color: #ED1B2E;
         flex-direction: column;
         width: 50%;
         border: 1px solid blue;
-        height: 400px;
+        height: 420px;
         padding: 10px;
         align-items: center;
         
@@ -41,13 +39,14 @@ $main_color: #ED1B2E;
             margin-right: 5px;
             display: inline-block;
         }
-        #tits {
-            align-self: flex-end;
+        #buttons {
+            align-self: flex-start;
+            margin-left: 23px;
             margin-top: auto;
-            
+            height: 40px;
         }
         #books {
-            background-image: url("../img/books.png");
+            background-image: url("../img/contacts.png");
             margin: 0;
             padding: 0;
             transition: all 0.1s ease-in-out;
@@ -59,19 +58,7 @@ $main_color: #ED1B2E;
                 transform: rotate(8deg);
             }
         }
-        #contacts {
-            background-image: url("../img/contacts.png");
-            margin: 0;
-            padding: 0;
-            transition: all 0.1s ease-in-out;
-            &:hover{
-                transform: scale(1.1);
-                cursor: pointer;
-            }
-            &:active {
-                transform: rotate(08deg);
-            }
-        }
+       
         .listBooks {
             background: tomato;
             padding: 5px 10px;

@@ -7,7 +7,28 @@ var $app = $('#app');
 
 
 
-
+function sortByLetterBook(a,b) {
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+        return -1
+    }
+    else if (a.name.toLowerCase() > b.name.toLowerCase()) {
+        return 1
+    }
+    else {
+        return 0
+    }
+}
+function sortByLetterEntry(a,b) {
+    if (a.lastName.toLowerCase() < b.lastName.toLowerCase()) {
+        return -1
+    }
+    else if (a.lastName.toLowerCase() > b.lastName.toLowerCase()) {
+        return 1
+    }
+    else {
+        return 0
+    }
+}
 // Data retrieval functions
 function getAddressBooks() {
     return $.getJSON(API_URL + '/AddressBooks');
@@ -18,11 +39,14 @@ function getAddressBook(id) {
 }
 
 function getEntries(addressBookId) {
-    // TODO... perhaps by using a GET to /AddressBooks/:id/entries :)
+    return $.getJSON(API_URL + '/AddressBooks/' + addressBookId + '/entries');
 }
 
 function getEntry(entryId) {
-    // TODO..
+    return $.getJSON(API_URL + '/Entries/' + entryId);
+}
+function getAddresses(entryId) {
+    return $.getJSON(API_URL + '/Entries/' + entryId + '/addresses')
 }
 // End data retrieval functions
 
@@ -33,15 +57,7 @@ $('#books').click(function() {
     $('.app__contentLeft').append('<ul></ul>');
     getAddressBooks().then(function(res) {
         result = res;
-        result = result.sort(function(a, b) {
-            if(a.name.toLowerCase() < b.name.toLowerCase()){
-                return -1
-            } else if(a.name.toLowerCase() > b.name.toLowerCase()){
-                return 1
-            } else {
-                return 0
-            }
-        })
+        result = result.sort(sortByLetterBook)
         result.forEach(function(book) {
             $('.app__contentLeft').find('ul').append('<li class="listBooks" data-id="' + book.id + '">' + book.name + '</li>');
         })
@@ -58,10 +74,59 @@ $('input[name="search-bar"]').on('keyup', function() {
     })
 });
 
+$(document).on('click', '.listBooks', function(e) {
+    $('.app__contentLeft').find('ul').empty();
+    var addBookId = $(this).data();
+    getEntries(addBookId.id).then(function(res) {
+        result = res;
+        result = result.sort(sortByLetterEntry);
+        $.each(result, function(i, entry) {
+            $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="'+entry.id+'">' + entry.lastName + ' ' + entry.firstName + '</li>');
+        })
+    })
+});
 
-$(document).on('click', '.listBooks', function() {
-    console.log($(this).data('id'));
-})
+$(document).on('click', '.entryList', function() {
+    var entryId = $(this).data().id;
+    var addresses = [];
+    var allAddresses = [];
+    getAddresses(entryId).then(function(res) {
+        if(res){
+            addresses = res;
+            addresses.forEach(function(address){
+                var filteredAddress = {};
+                for(var prop in address){
+                    if(address.hasOwnProperty(prop)){
+                        if(address[prop] !== null){
+                            filteredAddress[prop] = address[prop];
+                        }
+                    }
+                }
+                allAddresses.push(filteredAddress);
+                console.log(allAddresses);
+            })
+        }
+    })
+    getEntry(entryId).then(function(res) {
+        $('.app__contentRight').empty();
+        $('.app__contentRight').append(
+            '<div class="entryInfo">' +
+            '<p>First Name: '+res.firstName+'</p>' +
+            '<p>Last Name: '+res.lastName+'</p>' +
+            '<p>Birthday: '+res.birthday.substring(0, 10)+'</p>' +
+            '</div>' +
+            '' +
+            '<div class="entryAddress"></div>'
+            );
+        allAddresses.forEach(function(address) {
+            for(var prop in address){
+                $('.entryAddress').append(
+                    '<p>'+prop+' '+address[prop]+'</p>'
+                    )
+            }
+        })
+    });
+});
 
 
 function displayAddressBook(addressBookId) {

@@ -63,17 +63,16 @@ table {
     display: flex;
     width: 50%;
     border: 1px solid red;
-    height: 400px;
+    height: 420px;
     padding: 10px;
-    justify-content: center;
-    align-items: center; }
+    justify-content: center; }
   .app__leftSide {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     width: 50%;
     border: 1px solid blue;
-    height: 400px;
+    height: 420px;
     padding: 10px;
     align-items: center; }
     .app__leftSide input[name="search-bar"] {
@@ -83,11 +82,13 @@ table {
       height: 32px;
       margin-right: 5px;
       display: inline-block; }
-    .app__leftSide #tits {
-      align-self: flex-end;
-      margin-top: auto; }
+    .app__leftSide #buttons {
+      align-self: flex-start;
+      margin-left: 23px;
+      margin-top: auto;
+      height: 40px; }
     .app__leftSide #books {
-      background-image: url("../img/books.png");
+      background-image: url("../img/contacts.png");
       margin: 0;
       padding: 0;
       transition: all 0.1s ease-in-out; }
@@ -95,16 +96,6 @@ table {
         transform: scale(1.1);
         cursor: pointer; }
       .app__leftSide #books:active {
-        transform: rotate(8deg); }
-    .app__leftSide #contacts {
-      background-image: url("../img/contacts.png");
-      margin: 0;
-      padding: 0;
-      transition: all 0.1s ease-in-out; }
-      .app__leftSide #contacts:hover {
-        transform: scale(1.1);
-        cursor: pointer; }
-      .app__leftSide #contacts:active {
         transform: rotate(8deg); }
     .app__leftSide .listBooks {
       background: tomato;
