@@ -103,6 +103,15 @@ $main_color: #ED1B2E;
             border: 1px solid tomato;
             min-height: 20px;
         }
+        i {
+            float: right;
+            margin-top: 4px;
+            margin-right: 4px;
+            transition: all 0.2s ease;
+        }
+        .rotateArrow {
+            transform: rotate(180deg);
+        }
     }
 }
     &__contentLeft {

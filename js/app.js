@@ -87,7 +87,6 @@ $(document).on('click', '.listBooks', function(e) {
         })
     })
 });
-
 $(document).on('click', '.entryList', function() {
     var entryId = $(this).data().id;
     //Create new empty array to store filtered addresses
@@ -125,9 +124,8 @@ $(document).on('click', '.entryList', function() {
         var id = 0;
         //Display results
         allAddresses.forEach(function(address) {
-            
             $('.entryAddress').append(
-                '<div class="toggleAddress" id="'+id+'"></div>'
+                '<div class="toggleAddress" id="'+id+'"><h2>'+address.type.charAt(0).toUpperCase()+address.type.substring(1)+' Address<i class="fa fa-arrow-up"></i></h2></div>'
                 )
             for (var prop in address) {
                 $('.entryAddress').find('#'+id+'').append(
@@ -136,11 +134,18 @@ $(document).on('click', '.entryList', function() {
             }
             id++;
         })
+        $('.toggleAddress').find("p").toggle();
     });
 });
 
+
 $(document).on('click','.toggleAddress', function() {
-    //console.log($(this));
+    if($(this).find("i").hasClass("rotateArrow")){
+        $(this).find("i").removeClass("rotateArrow");
+    } else {
+        $(this).find("i").addClass("rotateArrow");
+    }
+    
     $(this).find('p').slideToggle(200);
 })
 

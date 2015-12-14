@@ -131,6 +131,13 @@ table {
       .app__contentRight .entryAddress .toggleAddress {
         border: 1px solid tomato;
         min-height: 20px; }
+      .app__contentRight .entryAddress i {
+        float: right;
+        margin-top: 4px;
+        margin-right: 4px;
+        transition: all 0.2s ease; }
+      .app__contentRight .entryAddress .rotateArrow {
+        transform: rotate(180deg); }
   .app__contentLeft {
     border: 1px solid black;
     overflow: auto;
