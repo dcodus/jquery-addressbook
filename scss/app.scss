@@ -88,9 +88,22 @@ $main_color: #ED1B2E;
             }
     }
     &__contentRight {
+    min-width: 280px;
     padding: 10px;
     line-height: 1.4em;
     border: 1px solid brown;
+    
+    .entryInfo {
+        border: 1px solid blue;
+        margin-bottom: 5px;
+    }
+    .entryAddress {
+        border: 1px solid green;
+        .toggleAddress {
+            border: 1px solid tomato;
+            min-height: 20px;
+        }
+    }
 }
     &__contentLeft {
     border: 1px solid black;

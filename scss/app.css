@@ -119,9 +119,18 @@ table {
     .app h1 span {
       color: #ED1B2E; }
   .app__contentRight {
+    min-width: 280px;
     padding: 10px;
     line-height: 1.4em;
     border: 1px solid brown; }
+    .app__contentRight .entryInfo {
+      border: 1px solid blue;
+      margin-bottom: 5px; }
+    .app__contentRight .entryAddress {
+      border: 1px solid green; }
+      .app__contentRight .entryAddress .toggleAddress {
+        border: 1px solid tomato;
+        min-height: 20px; }
   .app__contentLeft {
     border: 1px solid black;
     overflow: auto;

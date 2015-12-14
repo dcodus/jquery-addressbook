@@ -7,7 +7,7 @@ var $app = $('#app');
 
 
 
-function sortByLetterBook(a,b) {
+function sortByLetterBook(a, b) {
     if (a.name.toLowerCase() < b.name.toLowerCase()) {
         return -1
     }
@@ -18,7 +18,8 @@ function sortByLetterBook(a,b) {
         return 0
     }
 }
-function sortByLetterEntry(a,b) {
+
+function sortByLetterEntry(a, b) {
     if (a.lastName.toLowerCase() < b.lastName.toLowerCase()) {
         return -1
     }
@@ -43,8 +44,9 @@ function getEntries(addressBookId) {
 }
 
 function getEntry(entryId) {
-    return $.getJSON(API_URL + '/Entries/' + entryId);
+    return $.getJSON(API_URL + '/Entries/' + entryId + '?filter={"include": ["addresses","emails","phones"]}');
 }
+
 function getAddresses(entryId) {
     return $.getJSON(API_URL + '/Entries/' + entryId + '/addresses')
 }
@@ -81,53 +83,66 @@ $(document).on('click', '.listBooks', function(e) {
         result = res;
         result = result.sort(sortByLetterEntry);
         $.each(result, function(i, entry) {
-            $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="'+entry.id+'">' + entry.lastName + ' ' + entry.firstName + '</li>');
+            $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="' + entry.id + '">' + entry.lastName + ' ' + entry.firstName + '</li>');
         })
     })
 });
 
 $(document).on('click', '.entryList', function() {
     var entryId = $(this).data().id;
-    var addresses = [];
+    //Create new empty array to store filtered addresses
     var allAddresses = [];
-    getAddresses(entryId).then(function(res) {
-        if(res){
-            addresses = res;
-            addresses.forEach(function(address){
-                var filteredAddress = {};
-                for(var prop in address){
-                    if(address.hasOwnProperty(prop)){
-                        if(address[prop] !== null){
-                            filteredAddress[prop] = address[prop];
-                        }
-                    }
-                }
-                allAddresses.push(filteredAddress);
-                console.log(allAddresses);
-            })
-        }
-    })
     getEntry(entryId).then(function(res) {
         $('.app__contentRight').empty();
         $('.app__contentRight').append(
             '<div class="entryInfo">' +
-            '<p>First Name: '+res.firstName+'</p>' +
-            '<p>Last Name: '+res.lastName+'</p>' +
-            '<p>Birthday: '+res.birthday.substring(0, 10)+'</p>' +
+            '<p>First Name: ' + res.firstName + '</p>' +
+            '<p>Last Name: ' + res.lastName + '</p>' +
+            '<p>Birthday: ' + res.birthday.substring(0, 10) + '</p>' +
             '</div>' +
             '' +
             '<div class="entryAddress"></div>'
-            );
-        allAddresses.forEach(function(address) {
-            for(var prop in address){
-                $('.entryAddress').append(
-                    '<p>'+prop+' '+address[prop]+'</p>'
-                    )
+        );
+        //Loop over the addresses array from our entry
+        //Take each address object and filter it
+        res.addresses.forEach(function(address) {
+            //Create filtered object
+            var filteredAddress = {};
+            for (var prop in address) {
+                if (address.hasOwnProperty(prop)) {
+                    if (address[prop] !== null) {
+                        //Add properties and values to filtered object
+                        filteredAddress[prop] = address[prop];
+                    }
+                }
             }
+            delete filteredAddress.id
+            delete filteredAddress.entryId
+                //Push the new address object to the allAddresses array
+            allAddresses.push(filteredAddress);
+
+        })
+        var id = 0;
+        //Display results
+        allAddresses.forEach(function(address) {
+            
+            $('.entryAddress').append(
+                '<div class="toggleAddress" id="'+id+'"></div>'
+                )
+            for (var prop in address) {
+                $('.entryAddress').find('#'+id+'').append(
+                    '<p>' + prop + ' ' + address[prop] + '</p>'
+                )
+            }
+            id++;
         })
     });
 });
 
+$(document).on('click','.toggleAddress', function() {
+    //console.log($(this));
+    $(this).find('p').slideToggle(200);
+})
 
 function displayAddressBook(addressBookId) {
 
