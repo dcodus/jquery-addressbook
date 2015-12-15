@@ -46,9 +46,14 @@ function getEntries(addressBookId) {
 function getEntry(entryId) {
     return $.getJSON(API_URL + '/Entries/' + entryId + '?filter={"include": ["addresses","emails","phones"]}');
 }
-
-function getAddresses(entryId) {
-    return $.getJSON(API_URL + '/Entries/' + entryId + '/addresses')
+function deleteAddressBook(addressBookId) {
+    return $.ajax({
+        url: API_URL + '/AddressBooks/'+ addressBookId,
+        type: 'DELETE',
+        // beforeSend: function () {
+        //     confirm("Are you sure?");
+        // }
+    });
 }
 // End data retrieval functions
 
@@ -57,7 +62,32 @@ var result = [];
 $('#books').on('click', loadBooks);
 $(document).on('ready', loadBooks);
 
+$('#delete').on("click", function() {
+    var $listBooks = $('.listBooks');
+    if($listBooks.find("button").length === 0){
+        $.each($listBooks, function(){
+            $(this).prepend('<button class="deleteButton">X</button>  ');
+            // console.log(this);
+        })
+    } else {
+        $listBooks.children("button").remove();
+    }
+})
+
+$(document).on("click",".deleteButton", function(e) {
+    e.stopPropagation();
+   var addBookId = $(this).parent().data().id;
+   $(this).parent().hide("slow");
+  deleteAddressBook(addBookId);
+//   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
+   
+})
+
 function loadBooks() {
+    $('.app__contentRight').empty();
+    $('.editButton').remove();
+    $('input[name="search-bar"]').off("keyup");
+    $('input[name="search-bar"]').on('keyup', searchBarBook);
     $('.app__contentLeft').find('ul').remove();
     $('.app__contentLeft').append('<ul></ul>');
     getAddressBooks().then(function(res) {
@@ -69,36 +99,54 @@ function loadBooks() {
     })
 }
 
-$('input[name="search-bar"]').on('keyup', function() {
+function searchBarBook() {
     var search = $(this).val().toLowerCase();
     $('.app__contentLeft').find('ul').empty();
+    console.log(result);
     result.forEach(function(book) {
         var lowerCase = book.name.toLowerCase();
         if (lowerCase.indexOf(search) > -1) {
             $('.app__contentLeft').find('ul').append('<li class="listBooks" data-id="' + book.id + '">' + book.name + '</li>');
         }
     })
-});
+}
+
+function searchBarEntry() {
+    var search = $(this).val().toLowerCase();
+    $('.app__contentLeft').find('ul').empty();
+    result.forEach(function(entry) {
+        var lowerCaseLastName = entry.lastName.toLowerCase();
+        var lowerCaseFirstName = entry.firstName.toLowerCase();
+        if (lowerCaseLastName.indexOf(search) > -1 || lowerCaseFirstName.indexOf(search) > -1) {
+            $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="' + entry.id + '">' + entry.lastName +' '+ entry.firstName+'</li>');
+        }
+    })
+}
 
 $(document).on('click', '.listBooks', function(e) {
+     $('input[name="search-bar"]').off('keyup');
+    $('input[name="search-bar"]').on('keyup', searchBarEntry);
     $('.app__contentLeft').find('ul').empty();
     var addBookId = $(this).data();
     getEntries(addBookId.id).then(function(res) {
         result = res;
         result = result.sort(sortByLetterEntry);
+        
         $.each(result, function(i, entry) {
             $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="' + entry.id + '">' + entry.lastName + ' ' + entry.firstName + '</li>');
         })
     })
 });
 $(document).on('click', '.entryList', function() {
+    var $this = $(this);
     var entryId = $(this).data().id;
     //Create new empty array to store filtered addresses
     var allAddresses = [];
     var allPhones = [];
     var allEmails = [];
     getEntry(entryId).then(function(res) {
-        console.log(res)
+        $('.editButton').remove();
+        $('.leftSideButtons').append('<i class="fa fa-edit fa-2x editButton"></i>');
         $('.app__contentRight').empty();
         $('.app__contentRight').append(
             '<div class="entryInfo">' +
@@ -110,7 +158,8 @@ $(document).on('click', '.entryList', function() {
             '' +
             '<div class="entryEmail"></div>' +
             '' +
-            '<div class="entryAddress"></div>'
+            '<div class="entryAddress"></div>' +
+            ''
         );
         //Loop over the addresses array from our entry
         //Take each address object and filter it
@@ -135,47 +184,48 @@ $(document).on('click', '.entryList', function() {
         //Display results
         allAddresses.forEach(function(address) {
             $('.entryAddress').append(
-                '<div class="toggleAddress" id="'+id+'"><h2>'+address.type.charAt(0).toUpperCase()+address.type.substring(1)+' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
-                )
+                '<div class="toggleAddress" id="' + id + '"><h2>' + address.type.charAt(0).toUpperCase() + address.type.substring(1) + ' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
+            )
             for (var prop in address) {
-                $('.entryAddress').find('#'+id+'').append(
+                $('.entryAddress').find('#' + id + '').append(
                     '<p>' + prop + ' ' + address[prop] + '</p>'
                 )
             }
             id++;
         })
-        
+
         res.phones.forEach(function(phone) {
-            var phoneType = phone.type.charAt(0).toUpperCase()+phone.type.substring(1);
-            var phoneSubtype = phone.phoneType.charAt(0).toUpperCase()+phone.phoneType.substring(1)
+            var phoneType = phone.type.charAt(0).toUpperCase() + phone.type.substring(1);
+            var phoneSubtype = phone.phoneType.charAt(0).toUpperCase() + phone.phoneType.substring(1)
             var phoneNumber = phone.phoneNumber;
-            if(phone){
-                $('.entryPhone').append('<p>'+phoneType+' ('+phoneSubtype+'): '+phoneNumber+'</p>')
+            if (phone) {
+                $('.entryPhone').append('<p>' + phoneType + ' (' + phoneSubtype + '): ' + phoneNumber + '</p>')
             }
         })
-        res.emails.forEach(function(email){
-            var emailType = email.type.charAt(0).toUpperCase()+email.type.substring(1);
+        res.emails.forEach(function(email) {
+            var emailType = email.type.charAt(0).toUpperCase() + email.type.substring(1);
             var emailAddress = email.email
-            if(email){
-                $('.entryEmail').append('<p>'+emailType+' Email: '+emailAddress+'</p>')
+            if (email) {
+                $('.entryEmail').append('<p>' + emailType + ' Email: ' + emailAddress + '</p>')
             }
         })
-        
+
         $('.toggleAddress').find("p").toggle();
     });
 });
 
 
-$(document).on('click','.toggleAddress', function() {
+$(document).on('click', '.toggleAddress', function() {
     var $this = $(this);
-    if($this.find("i").hasClass("rotateArrow")){
+    if ($this.find("i").hasClass("rotateArrow")) {
         $this.find("i").removeClass("rotateArrow");
         $this.find("span").text("Click to expand")
-    } else {
+    }
+    else {
         $this.find("i").addClass("rotateArrow");
         $this.find("span").text("Click to hide")
     }
-    
+
     $this.find('p').slideToggle(200);
 })
 
