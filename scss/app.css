@@ -122,7 +122,8 @@ table {
     min-width: 280px;
     padding: 10px;
     line-height: 1.4em;
-    border: 1px solid brown; }
+    border: 1px solid brown;
+    overflow: auto; }
     .app__contentRight .entryInfo {
       border: 1px solid blue;
       margin-bottom: 5px; }
@@ -138,6 +139,17 @@ table {
         transition: all 0.2s ease; }
       .app__contentRight .entryAddress .rotateArrow {
         transform: rotate(180deg); }
+      .app__contentRight .entryAddress span {
+        font-size: 12px;
+        float: right;
+        margin-right: 3px;
+        border: 1px solid green; }
+    .app__contentRight .entryPhone {
+      border: 1px solid purple;
+      margin: 10px 0; }
+    .app__contentRight .entryEmail {
+      border: 1px solid pink;
+      margin: 10px 0; }
   .app__contentLeft {
     border: 1px solid black;
     overflow: auto;

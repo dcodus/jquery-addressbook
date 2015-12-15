@@ -54,7 +54,10 @@ function getAddresses(entryId) {
 
 
 var result = [];
-$('#books').click(function() {
+$('#books').on('click', loadBooks);
+$(document).on('ready', loadBooks);
+
+function loadBooks() {
     $('.app__contentLeft').find('ul').remove();
     $('.app__contentLeft').append('<ul></ul>');
     getAddressBooks().then(function(res) {
@@ -64,7 +67,8 @@ $('#books').click(function() {
             $('.app__contentLeft').find('ul').append('<li class="listBooks" data-id="' + book.id + '">' + book.name + '</li>');
         })
     })
-})
+}
+
 $('input[name="search-bar"]').on('keyup', function() {
     var search = $(this).val().toLowerCase();
     $('.app__contentLeft').find('ul').empty();
@@ -91,7 +95,10 @@ $(document).on('click', '.entryList', function() {
     var entryId = $(this).data().id;
     //Create new empty array to store filtered addresses
     var allAddresses = [];
+    var allPhones = [];
+    var allEmails = [];
     getEntry(entryId).then(function(res) {
+        console.log(res)
         $('.app__contentRight').empty();
         $('.app__contentRight').append(
             '<div class="entryInfo">' +
@@ -99,6 +106,9 @@ $(document).on('click', '.entryList', function() {
             '<p>Last Name: ' + res.lastName + '</p>' +
             '<p>Birthday: ' + res.birthday.substring(0, 10) + '</p>' +
             '</div>' +
+            '<div class="entryPhone"></div>' +
+            '' +
+            '<div class="entryEmail"></div>' +
             '' +
             '<div class="entryAddress"></div>'
         );
@@ -125,7 +135,7 @@ $(document).on('click', '.entryList', function() {
         //Display results
         allAddresses.forEach(function(address) {
             $('.entryAddress').append(
-                '<div class="toggleAddress" id="'+id+'"><h2>'+address.type.charAt(0).toUpperCase()+address.type.substring(1)+' Address<i class="fa fa-arrow-up"></i></h2></div>'
+                '<div class="toggleAddress" id="'+id+'"><h2>'+address.type.charAt(0).toUpperCase()+address.type.substring(1)+' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
                 )
             for (var prop in address) {
                 $('.entryAddress').find('#'+id+'').append(
@@ -134,19 +144,39 @@ $(document).on('click', '.entryList', function() {
             }
             id++;
         })
+        
+        res.phones.forEach(function(phone) {
+            var phoneType = phone.type.charAt(0).toUpperCase()+phone.type.substring(1);
+            var phoneSubtype = phone.phoneType.charAt(0).toUpperCase()+phone.phoneType.substring(1)
+            var phoneNumber = phone.phoneNumber;
+            if(phone){
+                $('.entryPhone').append('<p>'+phoneType+' ('+phoneSubtype+'): '+phoneNumber+'</p>')
+            }
+        })
+        res.emails.forEach(function(email){
+            var emailType = email.type.charAt(0).toUpperCase()+email.type.substring(1);
+            var emailAddress = email.email
+            if(email){
+                $('.entryEmail').append('<p>'+emailType+' Email: '+emailAddress+'</p>')
+            }
+        })
+        
         $('.toggleAddress').find("p").toggle();
     });
 });
 
 
 $(document).on('click','.toggleAddress', function() {
-    if($(this).find("i").hasClass("rotateArrow")){
-        $(this).find("i").removeClass("rotateArrow");
+    var $this = $(this);
+    if($this.find("i").hasClass("rotateArrow")){
+        $this.find("i").removeClass("rotateArrow");
+        $this.find("span").text("Click to expand")
     } else {
-        $(this).find("i").addClass("rotateArrow");
+        $this.find("i").addClass("rotateArrow");
+        $this.find("span").text("Click to hide")
     }
     
-    $(this).find('p').slideToggle(200);
+    $this.find('p').slideToggle(200);
 })
 
 function displayAddressBook(addressBookId) {

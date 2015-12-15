@@ -92,6 +92,7 @@ $main_color: #ED1B2E;
     padding: 10px;
     line-height: 1.4em;
     border: 1px solid brown;
+    overflow: auto;
     
     .entryInfo {
         border: 1px solid blue;
@@ -112,6 +113,20 @@ $main_color: #ED1B2E;
         .rotateArrow {
             transform: rotate(180deg);
         }
+        span {
+            font-size: 12px;
+            float: right;
+            margin-right: 3px;
+            border: 1px solid green;
+        }
+    }
+    .entryPhone {
+        border: 1px solid purple;
+        margin: 10px 0;
+    }
+    .entryEmail {
+        border: 1px solid pink;
+        margin: 10px 0;
     }
 }
     &__contentLeft {
