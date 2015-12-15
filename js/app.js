@@ -46,14 +46,22 @@ function getEntries(addressBookId) {
 function getEntry(entryId) {
     return $.getJSON(API_URL + '/Entries/' + entryId + '?filter={"include": ["addresses","emails","phones"]}');
 }
+
 function deleteAddressBook(addressBookId) {
     return $.ajax({
-        url: API_URL + '/AddressBooks/'+ addressBookId,
+        url: API_URL + '/AddressBooks/' + addressBookId,
         type: 'DELETE',
         // beforeSend: function () {
         //     confirm("Are you sure?");
         // }
     });
+}
+
+function deleteEntries(entryId) {
+    return $.ajax({
+        url: API_URL + '/Entries/' + entryId,
+        type: 'DELETE'
+    })
 }
 // End data retrieval functions
 
@@ -62,25 +70,42 @@ var result = [];
 $('#books').on('click', loadBooks);
 $(document).on('ready', loadBooks);
 
-$('#delete').on("click", function() {
+function deleteBook() {
     var $listBooks = $('.listBooks');
-    if($listBooks.find("button").length === 0){
-        $.each($listBooks, function(){
+    if ($listBooks.find("button").length === 0) {
+        $.each($listBooks, function() {
             $(this).prepend('<button class="deleteButton">X</button>  ');
             // console.log(this);
         })
-    } else {
+    }
+    else {
         $listBooks.children("button").remove();
     }
-})
+}
 
-$(document).on("click",".deleteButton", function(e) {
+function deleteEntry() {
+    var $entryList = $('.entryList');
+    if ($entryList.find("button").length === 0) {
+        $.each($entryList, function() {
+            $(this).prepend('<button class="deleteButton">X</button>  ');
+            // console.log(this);
+        })
+    }
+    else {
+        $entryList.children("button").remove();
+    }
+}
+
+
+$('#delete').on("click", deleteBook);
+
+$(document).on("click", ".deleteButton", function(e) {
     e.stopPropagation();
-   var addBookId = $(this).parent().data().id;
-   $(this).parent().hide("slow");
-  deleteAddressBook(addBookId);
-//   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
-   
+    var addBookId = $(this).parent().data().id;
+    $(this).parent().hide("slow");
+    deleteAddressBook(addBookId);
+    //   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
+
 })
 
 function loadBooks() {
@@ -118,20 +143,31 @@ function searchBarEntry() {
         var lowerCaseLastName = entry.lastName.toLowerCase();
         var lowerCaseFirstName = entry.firstName.toLowerCase();
         if (lowerCaseLastName.indexOf(search) > -1 || lowerCaseFirstName.indexOf(search) > -1) {
-            $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="' + entry.id + '">' + entry.lastName +' '+ entry.firstName+'</li>');
+            $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="' + entry.id + '">' + entry.lastName + ' ' + entry.firstName + '</li>');
         }
     })
 }
 
 $(document).on('click', '.listBooks', function(e) {
-     $('input[name="search-bar"]').off('keyup');
+    $('#delete').off("click");
+    $('#delete').on("click", deleteEntry);
+    $(document).off("click", ".deleteButton");
+    $(document).on("click", ".deleteButton", function(e) {
+        e.stopPropagation();
+        var entryId = $(this).parent().data().id;
+        $(this).parent().hide("slow");
+        deleteEntries(entryId);
+        //   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
+
+    })
+    $('input[name="search-bar"]').off('keyup');
     $('input[name="search-bar"]').on('keyup', searchBarEntry);
     $('.app__contentLeft').find('ul').empty();
     var addBookId = $(this).data();
     getEntries(addBookId.id).then(function(res) {
         result = res;
         result = result.sort(sortByLetterEntry);
-        
+
         $.each(result, function(i, entry) {
             $('.app__contentLeft').find('ul').append('<li class="entryList" data-id="' + entry.id + '">' + entry.lastName + ' ' + entry.firstName + '</li>');
         })
