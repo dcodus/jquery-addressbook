@@ -59,7 +59,25 @@ function deleteAddressBook(addressBookId) {
 
 function deleteEntries(entryId) {
     return $.ajax({
-        url: API_URL + '/Entries/' + entryId,
+        url: API_URL + '/AddressBooks/' + entryId,
+        type: 'DELETE'
+    })
+}
+function deleteEmails(emailId) {
+    return $.ajax({
+        url: API_URL + '/EmailAddresses/' + emailId,
+        type: 'DELETE'
+    })
+}
+function deletePhones(phoneId) {
+    return $.ajax({
+        url: API_URL + '/Phones/' + phoneId,
+        type: 'DELETE'
+    })
+}
+function deleteAddresses(addressId) {
+    return $.ajax({
+        url: API_URL + '/Addresses/' + addressId,
         type: 'DELETE'
     })
 }
@@ -82,23 +100,19 @@ function deleteBook() {
         $listBooks.children("button").remove();
     }
 }
-
 function deleteEntry() {
+    console.log("HELLO!")
     var $entryList = $('.entryList');
     if ($entryList.find("button").length === 0) {
         $.each($entryList, function() {
             $(this).prepend('<button class="deleteButton">X</button>  ');
-            // console.log(this);
+            console.log(this);
         })
     }
     else {
         $entryList.children("button").remove();
     }
 }
-
-
-$('#delete').on("click", deleteBook);
-
 $(document).on("click", ".deleteButton", function(e) {
     e.stopPropagation();
     var addBookId = $(this).parent().data().id;
@@ -107,8 +121,46 @@ $(document).on("click", ".deleteButton", function(e) {
     //   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
 
 })
+$(document).on("dblclick",".entryEmail p", function() {
+    var emailId = $(this).data().id;
+    if($(this).find("button").length === 0){
+     $(this).prepend('<button class="removeEmail">X</button>  ')   
+    } else {
+        $(this).find("button").remove(); 
+    }
+});
+$(document).on("click", ".removeEmail", function(e) {
+    e.stopPropagation();
+    var emailId = $(this).parent().data().id
+    console.log(emailId);
+    $(this).parent().hide("normal");
+    deleteEmails(emailId);
+});
+$(document).on("dblclick", ".entryPhone p", function(e) {
+    if($(this).find("button").length === 0){
+     $(this).prepend('<button class="removePhone">X</button>  ')   
+    } else {
+        $(this).find("button").remove(); 
+    }
+})
+$(document).on("click", ".removePhone", function(e) {
+    e.stopPropagation();
+    var phoneId = $(this).parent().data().id
+    console.log(phoneId);
+    $(this).parent().hide("normal");
+    deletePhones(phoneId);
+});
+$(document).on("click", ".removeAddress", function(e) {
+    e.stopPropagation();
+    $(this).closest("div").hide("fast");
+    var addressId = $(this).closest("div").data().id;
+    // console.log(addressId);
+    
+})
 
 function loadBooks() {
+    $("#delete").off("click")
+    $('#delete').on("click", deleteBook);
     $('.app__contentRight').empty();
     $('.editButton').remove();
     $('input[name="search-bar"]').off("keyup");
@@ -123,7 +175,6 @@ function loadBooks() {
         })
     })
 }
-
 function searchBarBook() {
     var search = $(this).val().toLowerCase();
     $('.app__contentLeft').find('ul').empty();
@@ -135,7 +186,6 @@ function searchBarBook() {
         }
     })
 }
-
 function searchBarEntry() {
     var search = $(this).val().toLowerCase();
     $('.app__contentLeft').find('ul').empty();
@@ -151,15 +201,8 @@ function searchBarEntry() {
 $(document).on('click', '.listBooks', function(e) {
     $('#delete').off("click");
     $('#delete').on("click", deleteEntry);
-    $(document).off("click", ".deleteButton");
-    $(document).on("click", ".deleteButton", function(e) {
-        e.stopPropagation();
-        var entryId = $(this).parent().data().id;
-        $(this).parent().hide("slow");
-        deleteEntries(entryId);
-        //   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
 
-    })
+    
     $('input[name="search-bar"]').off('keyup');
     $('input[name="search-bar"]').on('keyup', searchBarEntry);
     $('.app__contentLeft').find('ul').empty();
@@ -174,6 +217,8 @@ $(document).on('click', '.listBooks', function(e) {
     })
 });
 $(document).on('click', '.entryList', function() {
+    //WE STOPED HERE WE HAVE TO HIDE THE ID
+    console.log($(this).find('.toggleAddress'))
     var $this = $(this);
     var entryId = $(this).data().id;
     //Create new empty array to store filtered addresses
@@ -210,7 +255,6 @@ $(document).on('click', '.entryList', function() {
                     }
                 }
             }
-            delete filteredAddress.id
             delete filteredAddress.entryId
                 //Push the new address object to the allAddresses array
             allAddresses.push(filteredAddress);
@@ -219,8 +263,9 @@ $(document).on('click', '.entryList', function() {
         var id = 0;
         //Display results
         allAddresses.forEach(function(address) {
+            // console.log(address);
             $('.entryAddress').append(
-                '<div class="toggleAddress" id="' + id + '"><h2>' + address.type.charAt(0).toUpperCase() + address.type.substring(1) + ' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
+                '<div data-id="'+address.id+'"class="toggleAddress" id="' + id + '"><h2>' + address.type.charAt(0).toUpperCase() + address.type.substring(1) + ' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
             )
             for (var prop in address) {
                 $('.entryAddress').find('#' + id + '').append(
@@ -235,14 +280,14 @@ $(document).on('click', '.entryList', function() {
             var phoneSubtype = phone.phoneType.charAt(0).toUpperCase() + phone.phoneType.substring(1)
             var phoneNumber = phone.phoneNumber;
             if (phone) {
-                $('.entryPhone').append('<p>' + phoneType + ' (' + phoneSubtype + '): ' + phoneNumber + '</p>')
+                $('.entryPhone').append('<p data-id="'+phone.id+'">' + phoneType + ' (' + phoneSubtype + '): ' + phoneNumber + '</p>')
             }
         })
         res.emails.forEach(function(email) {
             var emailType = email.type.charAt(0).toUpperCase() + email.type.substring(1);
             var emailAddress = email.email
             if (email) {
-                $('.entryEmail').append('<p>' + emailType + ' Email: ' + emailAddress + '</p>')
+                $('.entryEmail').append('<p data-id="'+email.id+'">' + emailType + ' Email: ' + emailAddress + '</p>')
             }
         })
 
@@ -256,22 +301,18 @@ $(document).on('click', '.toggleAddress', function() {
     if ($this.find("i").hasClass("rotateArrow")) {
         $this.find("i").removeClass("rotateArrow");
         $this.find("span").text("Click to expand")
+        $this.find('h2 button').remove();
     }
     else {
         $this.find("i").addClass("rotateArrow");
-        $this.find("span").text("Click to hide")
+        $this.find("span").text("Click to hide");
+        $this.find("h2").prepend('<button class="editAddress">Edit</button>');
+        $this.find("h2").prepend('<button class="removeAddress">X</button>');
     }
 
     $this.find('p').slideToggle(200);
 })
 
-function displayAddressBook(addressBookId) {
-
-}
-
-function displayEntry() {
-
-}
 // End functions that display views
 
 
