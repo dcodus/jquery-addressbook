@@ -81,6 +81,22 @@ function deleteAddresses(addressId) {
         type: 'DELETE'
     })
 }
+function addAddressBook(addBookName) {
+  return  $.ajax({
+        type: 'POST',
+        url: API_URL + '/AddressBooks',
+        data: addBookName,
+        dataType: 'json'
+        })
+}
+function addEntry(bookId, addNewEntry) {
+    return $.ajax({
+        type: 'POST',
+        url: API_URL + '/Entries',
+        data: addNewEntry,
+        dataType: 'json'
+    })
+}
 // End data retrieval functions
 
 
@@ -112,6 +128,41 @@ function deleteEntry() {
     else {
         $entryList.children("button").remove();
     }
+}
+function addNewBook() {
+        $('.app__contentRight').empty();
+        $('.app__contentRight').append(
+            '<form class="addNewBookForm">' +
+            '<label for="addNewBook">Address Book Name</label>' +
+            '<input type="text" name="addNewBook">' +
+            '<button id="addNewBookButton">Add</button>' +
+            '</form>'
+            )
+    }
+function addNewEntry(e) {
+    console.log(e.data.bookId);
+    $('.app__contentRight').empty();
+        $('.app__contentRight').append(
+            '<form class="addNewEntryForm">' +
+            '<label for="addNewEntryName">First Name</label>' +
+            '<input type="text" name="addNewEntryName">' +
+            '<label for="addNewEntryLastName">Last Name</label>' +
+            '<input type="text" name="addNewEntryLastName">' +
+            '<div class="addEntryBirthday">' +
+            '<button class="addButtonEntry">+</button><span>add birthday</span>' +
+            '</div>' +
+            '<div class="addEntryPhones">' +
+            '<button class="addButtonEntry">+</button>  add phones' +
+            '</div>' +
+            '<div class="addEntryEmail">' +
+            '<button class="addButtonEntry">+</button>  add emails' +
+            '</div>' +
+            '<div class="addEntryAddresses">' +
+            '<button class="addButtonEntry">+</button>  add addresses' +
+            '</div>' +
+            '<button id="addNewEntryButton">Add</button>' +
+            '</form>'
+            )
 }
 $(document).on("click", ".deleteButton", function(e) {
     e.stopPropagation();
@@ -154,11 +205,40 @@ $(document).on("click", ".removeAddress", function(e) {
     e.stopPropagation();
     $(this).closest("div").hide("fast");
     var addressId = $(this).closest("div").data().id;
+    deleteAddresses(addressId);
     // console.log(addressId);
     
 })
-
+$(document).on("click", ".addNewBookForm", function(e) {
+    e.preventDefault();
+})
+$(document).on("click", ".addNewEntryForm", function(e) {
+    e.preventDefault();
+})
+$(document).on("click", "#addNewBookButton", function(e) {
+   var bookName = $('.addNewBookForm input[type="text"]').val();
+   var postNewBook = {name: bookName}
+   if(bookName){
+      addAddressBook(postNewBook);
+   }
+  $('.app__contentRight').empty();
+  if(bookName){
+  $('.app__rightSide').append(
+      '<h2>Address Book Added!</h2>'
+      );
+    $('.app__rightSide').find("h2").hide().fadeIn(500).delay(1000).fadeOut("slow", function () {
+        $('.app__rightSide').find("h2").remove();
+          loadBooks();   
+    })
+  } else {
+      loadBooks();
+  }
+})
+$(document).on("click", "#addNewEntryButton", function(e) {
+    
+})
 function loadBooks() {
+    $('#addNew').on("click", addNewBook);
     $("#delete").off("click")
     $('#delete').on("click", deleteBook);
     $('.app__contentRight').empty();
@@ -198,10 +278,15 @@ function searchBarEntry() {
     })
 }
 
+
 $(document).on('click', '.listBooks', function(e) {
+    var $currentBookId = $(this).data().id;
+    
+    $('.app__contentRight').empty();
     $('#delete').off("click");
     $('#delete').on("click", deleteEntry);
-
+    $('#addNew').off("click");
+    $('#addNew').on("click",{bookId: $currentBookId}, addNewEntry);
     
     $('input[name="search-bar"]').off('keyup');
     $('input[name="search-bar"]').on('keyup', searchBarEntry);
@@ -217,8 +302,9 @@ $(document).on('click', '.listBooks', function(e) {
     })
 });
 $(document).on('click', '.entryList', function() {
+    
     //WE STOPED HERE WE HAVE TO HIDE THE ID
-    console.log($(this).find('.toggleAddress'))
+    // console.log($(this).find('.toggleAddress'))
     var $this = $(this);
     var entryId = $(this).data().id;
     //Create new empty array to store filtered addresses
@@ -263,7 +349,6 @@ $(document).on('click', '.entryList', function() {
         var id = 0;
         //Display results
         allAddresses.forEach(function(address) {
-            // console.log(address);
             $('.entryAddress').append(
                 '<div data-id="'+address.id+'"class="toggleAddress" id="' + id + '"><h2>' + address.type.charAt(0).toUpperCase() + address.type.substring(1) + ' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
             )
@@ -297,6 +382,7 @@ $(document).on('click', '.entryList', function() {
 
 
 $(document).on('click', '.toggleAddress', function() {
+    $(this).find('p:contains("id")').detach();
     var $this = $(this);
     if ($this.find("i").hasClass("rotateArrow")) {
         $this.find("i").removeClass("rotateArrow");
@@ -312,6 +398,8 @@ $(document).on('click', '.toggleAddress', function() {
 
     $this.find('p').slideToggle(200);
 })
+
+
 
 // End functions that display views
 

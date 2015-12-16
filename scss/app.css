@@ -77,6 +77,14 @@ table {
     .app__rightSide .editButton:hover {
       transform: scale(1.1);
       opacity: 0.9; }
+    .app__rightSide .addNewEntryForm {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column; }
+      .app__rightSide .addNewEntryForm #addNewEntryButton {
+        margin-top: 10px;
+        width: 50%;
+        align-self: center; }
   .app__leftSide {
     display: flex;
     flex-wrap: wrap;
@@ -117,6 +125,16 @@ table {
         transform: scale(1.1);
         cursor: pointer; }
       .app__leftSide #delete:active {
+        transform: rotate(8deg); }
+    .app__leftSide #addNew {
+      background-image: url("../img/addressbook_add.ico");
+      background-size: cover;
+      transition: all 0.1s ease;
+      margin-right: 10px; }
+      .app__leftSide #addNew:hover {
+        transform: scale(1.1);
+        cursor: pointer; }
+      .app__leftSide #addNew:active {
         transform: rotate(8deg); }
     .app__leftSide .listBooks {
       background: tomato;
@@ -172,6 +190,28 @@ table {
     .app__contentRight .entryEmail {
       border: 1px solid pink;
       margin: 10px 0; }
+    .app__contentRight .addEntryBirthday {
+      border-bottom: 1px solid #666;
+      color: #086BA0; }
+    .app__contentRight .addEntryPhones {
+      border-bottom: 1px solid #666;
+      color: #086BA0; }
+    .app__contentRight .addEntryEmail {
+      border-bottom: 1px solid #666;
+      color: #086BA0; }
+    .app__contentRight .addEntryAddresses {
+      border-bottom: 1px solid #666;
+      color: #086BA0; }
+    .app__contentRight .addButtonEntry {
+      border-radius: 50%;
+      margin: 15px 0;
+      background: #6AE200;
+      color: #222;
+      border: 1px solid #222;
+      box-shadow: 1px 1px 3px #222;
+      transition: all 0.2s ease; }
+      .app__contentRight .addButtonEntry:hover {
+        transform: scale(1.1); }
   .app__contentLeft {
     border: 1px solid black;
     overflow: auto;

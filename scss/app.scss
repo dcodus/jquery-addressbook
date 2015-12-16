@@ -34,6 +34,16 @@ $main_color: #ED1B2E;
         transform: scale(1.1);
         opacity: 0.9;
     }
+    .addNewEntryForm {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        #addNewEntryButton {
+            margin-top: 10px;
+            width: 50%;
+            align-self: center;
+        }
+    }
     }
     &__leftSide {
         display: flex;
@@ -78,6 +88,19 @@ $main_color: #ED1B2E;
             background-image: url("../img/addressbook_remove.ico");
             background-size: cover;
             transition: all 0.1s ease;
+            &:hover {
+                transform: scale(1.1);
+                cursor: pointer;
+            }
+            &:active {
+                transform: rotate(8deg);
+            }
+        }
+        #addNew {
+            background-image: url("../img/addressbook_add.ico");
+            background-size: cover;
+            transition: all 0.1s ease;
+            margin-right: 10px;
             &:hover {
                 transform: scale(1.1);
                 cursor: pointer;
@@ -155,6 +178,34 @@ $main_color: #ED1B2E;
     .entryEmail {
         border: 1px solid pink;
         margin: 10px 0;
+    }
+    .addEntryBirthday {
+        border-bottom: 1px solid #666;
+        color: #086BA0;
+    }
+    .addEntryPhones {
+        border-bottom: 1px solid #666;
+        color: #086BA0;
+    }
+    .addEntryEmail {
+        border-bottom: 1px solid #666;
+        color: #086BA0;
+    }
+    .addEntryAddresses {
+        border-bottom: 1px solid #666;
+        color: #086BA0;
+    }
+    .addButtonEntry {
+        border-radius: 50%;
+        margin: 15px 0;
+        background: #6AE200;
+        color: #222;
+        border: 1px solid #222;
+        box-shadow: 1px 1px 3px #222;
+        transition: all 0.2s ease;
+        &:hover {
+            transform: scale(1.1);
+        }
     }
 }
     &__contentLeft {
