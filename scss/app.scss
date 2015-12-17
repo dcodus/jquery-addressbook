@@ -179,24 +179,22 @@ $main_color: #ED1B2E;
         border: 1px solid pink;
         margin: 10px 0;
     }
-    .addEntryBirthday {
-        border-bottom: 1px solid #666;
+    .addEntryData {
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         color: #086BA0;
-    }
-    .addEntryPhones {
-        border-bottom: 1px solid #666;
-        color: #086BA0;
-    }
-    .addEntryEmail {
-        border-bottom: 1px solid #666;
-        color: #086BA0;
-    }
-    .addEntryAddresses {
-        border-bottom: 1px solid #666;
-        color: #086BA0;
+        span {
+            margin-left: 10px;
+        }
+        select {
+          flex-shrink: 1
+        }
     }
     .addButtonEntry {
-        border-radius: 50%;
+        border-radius: 5px;
+        width: 20%;
         margin: 15px 0;
         background: #6AE200;
         color: #222;
@@ -206,6 +204,30 @@ $main_color: #ED1B2E;
         &:hover {
             transform: scale(1.1);
         }
+    }
+    .addButtonEntryDelete {
+        background: tomato;
+        margin-left: 5px;
+    }
+    .addressForm {
+        display: flex;
+        flex-wrap: wrap;
+        select {
+            flex-basis: 100%;
+            margin: 0 70px;
+        }
+        span {
+            display: inline-block;
+            width: 60px;
+        }
+        input {
+            width: 165px;
+        }
+    }
+    .addEditBtn {
+        display: flex;
+        width: 60%;
+        justify-content: center;
     }
 }
     &__contentLeft {

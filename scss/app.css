@@ -190,20 +190,19 @@ table {
     .app__contentRight .entryEmail {
       border: 1px solid pink;
       margin: 10px 0; }
-    .app__contentRight .addEntryBirthday {
-      border-bottom: 1px solid #666;
+    .app__contentRight .addEntryData {
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       color: #086BA0; }
-    .app__contentRight .addEntryPhones {
-      border-bottom: 1px solid #666;
-      color: #086BA0; }
-    .app__contentRight .addEntryEmail {
-      border-bottom: 1px solid #666;
-      color: #086BA0; }
-    .app__contentRight .addEntryAddresses {
-      border-bottom: 1px solid #666;
-      color: #086BA0; }
+      .app__contentRight .addEntryData span {
+        margin-left: 10px; }
+      .app__contentRight .addEntryData select {
+        flex-shrink: 1; }
     .app__contentRight .addButtonEntry {
-      border-radius: 50%;
+      border-radius: 5px;
+      width: 20%;
       margin: 15px 0;
       background: #6AE200;
       color: #222;
@@ -212,6 +211,24 @@ table {
       transition: all 0.2s ease; }
       .app__contentRight .addButtonEntry:hover {
         transform: scale(1.1); }
+    .app__contentRight .addButtonEntryDelete {
+      background: tomato;
+      margin-left: 5px; }
+    .app__contentRight .addressForm {
+      display: flex;
+      flex-wrap: wrap; }
+      .app__contentRight .addressForm select {
+        flex-basis: 100%;
+        margin: 0 70px; }
+      .app__contentRight .addressForm span {
+        display: inline-block;
+        width: 60px; }
+      .app__contentRight .addressForm input {
+        width: 165px; }
+    .app__contentRight .addEditBtn {
+      display: flex;
+      width: 60%;
+      justify-content: center; }
   .app__contentLeft {
     border: 1px solid black;
     overflow: auto;

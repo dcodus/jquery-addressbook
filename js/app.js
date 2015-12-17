@@ -63,32 +63,37 @@ function deleteEntries(entryId) {
         type: 'DELETE'
     })
 }
+
 function deleteEmails(emailId) {
     return $.ajax({
         url: API_URL + '/EmailAddresses/' + emailId,
         type: 'DELETE'
     })
 }
+
 function deletePhones(phoneId) {
     return $.ajax({
         url: API_URL + '/Phones/' + phoneId,
         type: 'DELETE'
     })
 }
+
 function deleteAddresses(addressId) {
     return $.ajax({
         url: API_URL + '/Addresses/' + addressId,
         type: 'DELETE'
     })
 }
+
 function addAddressBook(addBookName) {
-  return  $.ajax({
+    return $.ajax({
         type: 'POST',
         url: API_URL + '/AddressBooks',
         data: addBookName,
         dataType: 'json'
-        })
+    })
 }
+
 function addEntry(bookId, addNewEntry) {
     return $.ajax({
         type: 'POST',
@@ -116,6 +121,7 @@ function deleteBook() {
         $listBooks.children("button").remove();
     }
 }
+
 function deleteEntry() {
     console.log("HELLO!")
     var $entryList = $('.entryList');
@@ -129,40 +135,44 @@ function deleteEntry() {
         $entryList.children("button").remove();
     }
 }
+
 function addNewBook() {
-        $('.app__contentRight').empty();
-        $('.app__contentRight').append(
-            '<form class="addNewBookForm">' +
-            '<label for="addNewBook">Address Book Name</label>' +
-            '<input type="text" name="addNewBook">' +
-            '<button id="addNewBookButton">Add</button>' +
-            '</form>'
-            )
-    }
+    $('.app__contentRight').empty();
+    $('.app__contentRight').append(
+        '<form class="addNewBookForm">' +
+        '<label for="addNewBook">Address Book Name</label>' +
+        '<input type="text" name="addNewBook">' +
+        '<button id="addNewBookButton">Add</button>' +
+        '</form>'
+    )
+}
+
 function addNewEntry(e) {
     console.log(e.data.bookId);
     $('.app__contentRight').empty();
-        $('.app__contentRight').append(
-            '<form class="addNewEntryForm">' +
-            '<label for="addNewEntryName">First Name</label>' +
-            '<input type="text" name="addNewEntryName">' +
-            '<label for="addNewEntryLastName">Last Name</label>' +
-            '<input type="text" name="addNewEntryLastName">' +
-            '<div class="addEntryBirthday">' +
-            '<button class="addButtonEntry">+</button><span>add birthday</span>' +
-            '</div>' +
-            '<div class="addEntryPhones">' +
-            '<button class="addButtonEntry">+</button>  add phones' +
-            '</div>' +
-            '<div class="addEntryEmail">' +
-            '<button class="addButtonEntry">+</button>  add emails' +
-            '</div>' +
-            '<div class="addEntryAddresses">' +
-            '<button class="addButtonEntry">+</button>  add addresses' +
-            '</div>' +
-            '<button id="addNewEntryButton">Add</button>' +
-            '</form>'
-            )
+    $('.app__contentRight').append(
+        '<form class="addNewEntryForm">' +
+        '<label for="addNewEntryName">First Name</label>' +
+        '<input type="text" name="addNewEntryName">' +
+        '<label for="addNewEntryLastName">Last Name</label>' +
+        '<input type="text" name="addNewEntryLastName">' +
+        '<div class="addEntryBirthday addEntryData">' +
+        '<div class="addEditBtn">' +
+        '<button class="addButtonEntry">+</button>' +
+        '</div>' +
+        '<p>add birthday</p></div>' +
+        '<div class="addEntryPhones addEntryData">' +
+        '<button class="addButtonEntry">+</button><span>add phones</span>' +
+        '</div>' +
+        '<div class="addEntryEmail addEntryData">' +
+        '<button class="addButtonEntry">+</button><span>add emails</span>' +
+        '</div>' +
+        '<div class="addEntryAddresses addEntryData">' +
+        '<button class="addButtonEntry">+</button><span>add addresses</span>' +
+        '</div>' +
+        '<button data-id="' + e.data.bookId + '" id="addNewEntryButton">Add</button>' +
+        '</form>'
+    )
 }
 $(document).on("click", ".deleteButton", function(e) {
     e.stopPropagation();
@@ -172,12 +182,13 @@ $(document).on("click", ".deleteButton", function(e) {
     //   $(this).closest("li").slideUp('slow', function(){ $(this).closest("li").remove(); });
 
 })
-$(document).on("dblclick",".entryEmail p", function() {
+$(document).on("dblclick", ".entryEmail p", function() {
     var emailId = $(this).data().id;
-    if($(this).find("button").length === 0){
-     $(this).prepend('<button class="removeEmail">X</button>  ')   
-    } else {
-        $(this).find("button").remove(); 
+    if ($(this).find("button").length === 0) {
+        $(this).prepend('<button class="removeEmail">X</button>  ')
+    }
+    else {
+        $(this).find("button").remove();
     }
 });
 $(document).on("click", ".removeEmail", function(e) {
@@ -188,10 +199,11 @@ $(document).on("click", ".removeEmail", function(e) {
     deleteEmails(emailId);
 });
 $(document).on("dblclick", ".entryPhone p", function(e) {
-    if($(this).find("button").length === 0){
-     $(this).prepend('<button class="removePhone">X</button>  ')   
-    } else {
-        $(this).find("button").remove(); 
+    if ($(this).find("button").length === 0) {
+        $(this).prepend('<button class="removePhone">X</button>  ')
+    }
+    else {
+        $(this).find("button").remove();
     }
 })
 $(document).on("click", ".removePhone", function(e) {
@@ -207,7 +219,7 @@ $(document).on("click", ".removeAddress", function(e) {
     var addressId = $(this).closest("div").data().id;
     deleteAddresses(addressId);
     // console.log(addressId);
-    
+
 })
 $(document).on("click", ".addNewBookForm", function(e) {
     e.preventDefault();
@@ -216,27 +228,101 @@ $(document).on("click", ".addNewEntryForm", function(e) {
     e.preventDefault();
 })
 $(document).on("click", "#addNewBookButton", function(e) {
-   var bookName = $('.addNewBookForm input[type="text"]').val();
-   var postNewBook = {name: bookName}
-   if(bookName){
-      addAddressBook(postNewBook);
-   }
-  $('.app__contentRight').empty();
-  if(bookName){
-  $('.app__rightSide').append(
-      '<h2>Address Book Added!</h2>'
-      );
-    $('.app__rightSide').find("h2").hide().fadeIn(500).delay(1000).fadeOut("slow", function () {
-        $('.app__rightSide').find("h2").remove();
-          loadBooks();   
-    })
-  } else {
-      loadBooks();
-  }
+    var bookName = $('.addNewBookForm input[type="text"]').val();
+    var postNewBook = {
+        name: bookName
+    }
+    if (bookName) {
+        addAddressBook(postNewBook);
+    }
+    $('.app__contentRight').empty();
+    if (bookName) {
+        $('.app__rightSide').append(
+            '<h2>Address Book Added!</h2>'
+        );
+        $('.app__rightSide').find("h2").hide().fadeIn(500).delay(1000).fadeOut("slow", function() {
+            $('.app__rightSide').find("h2").remove();
+            loadBooks();
+        })
+    }
+    else {
+        loadBooks();
+    }
 })
-$(document).on("click", "#addNewEntryButton", function(e) {
+
+$(document).on("click", ".addButtonEntry", function(e) {
+    var $this = $(this);
+    var birthday = $('.addEntryBirthday');
+    var phones = $('.addEntryPhones');
+    var emails = $('.addEntryEmail');
+    var addresses = $('.addEntryAddresses');
     
+    if($this.closest(birthday).length > 0){
+        console.log("BIRTHDAY")
+        if ($('.addEntryBirthday input').length === 0) {
+            $(this).parent().parent().prepend('<input placeholder="YYYY-MM-DD" type="text"></input>')
+            $(this).after('<button class="addButtonEntryDelete addButtonEntry">-</button>')
+        }
+    }
+    
+    if($this.closest(phones).length > 0){
+        console.log("PHONES")
+        $this.parent().prepend('<div class="pushLeft"><select><option>Home</option><option>Work</option><option>Other</option></select><input type="text"></input><button class="addButtonEntryDelete">-</button></div>');
+        
+    }
+    
+    if($this.closest(emails).length > 0){
+        console.log('EMAILS')
+        $this.parent().prepend('<div class="pushLeft"><select><option>Home</option><option>Work</option><option>Other</option></select><input type="text"></input></div>');
+    }
+    
+    if($this.closest(addresses).length > 0){
+        console.log("ADDRESSES")
+        $this.parent().prepend(
+            '<div class="addressForm">' +
+            '<select><option>Home</option><option>Work</option><option>Other</option></select>' +
+            '<label><span>Line 1</span><input type="text"></input></label>' +
+            '<label><span>Line 2</span><input type="text"></input></label>' +
+            '<label><span>City</span><input type="text"></input></label>' +
+            '<label><span>State</span><input type="text"></input></label>' +
+            '<label><span>Zip</span><input type="text"></input></label>' +
+            '<label><span>Country</span><input type="text"></input></label>' +
+            '</div>'
+            )
+    }
 })
+
+//HERE ADD CHECKS FOR PARRENT AND REMOVE LIKE ABOVE
+
+$(document).on("click", ".addButtonEntryDelete", function(e) {
+    
+    //MUST MAKE INDIVIDUAL DELETE BUTTONS BASED ON PARENT LOCATION FOR BIRTHDAY ITS parent().parent()
+    $(this).parent().remove();
+    $(this).remove();
+})
+
+
+$(document).on("click", "#addNewEntryButton", function(e) {
+    var bookId = $(this).data().id;
+    var firstName = $('.addNewEntryForm input[name="addNewEntryName"]').val();
+    var lastName = $('.addNewEntryForm input[name="addNewEntryLastName"]').val();
+    var newEntry = {
+        firstName: firstName,
+        lastName: lastName,
+        addressBookId: bookId
+    };
+
+    var d = new Date($('.addEntryBirthday input').val())
+    console.log(d.toISOString())
+
+    // addEntry(bookId, newEntry).then(
+    //     function(entry) {
+    //         console.log(entry)
+    //     }
+    // )
+
+})
+
 function loadBooks() {
     $('#addNew').on("click", addNewBook);
     $("#delete").off("click")
@@ -255,6 +341,7 @@ function loadBooks() {
         })
     })
 }
+
 function searchBarBook() {
     var search = $(this).val().toLowerCase();
     $('.app__contentLeft').find('ul').empty();
@@ -266,6 +353,7 @@ function searchBarBook() {
         }
     })
 }
+
 function searchBarEntry() {
     var search = $(this).val().toLowerCase();
     $('.app__contentLeft').find('ul').empty();
@@ -281,13 +369,15 @@ function searchBarEntry() {
 
 $(document).on('click', '.listBooks', function(e) {
     var $currentBookId = $(this).data().id;
-    
+
     $('.app__contentRight').empty();
     $('#delete').off("click");
     $('#delete').on("click", deleteEntry);
     $('#addNew').off("click");
-    $('#addNew').on("click",{bookId: $currentBookId}, addNewEntry);
-    
+    $('#addNew').on("click", {
+        bookId: $currentBookId
+    }, addNewEntry);
+
     $('input[name="search-bar"]').off('keyup');
     $('input[name="search-bar"]').on('keyup', searchBarEntry);
     $('.app__contentLeft').find('ul').empty();
@@ -302,7 +392,7 @@ $(document).on('click', '.listBooks', function(e) {
     })
 });
 $(document).on('click', '.entryList', function() {
-    
+
     //WE STOPED HERE WE HAVE TO HIDE THE ID
     // console.log($(this).find('.toggleAddress'))
     var $this = $(this);
@@ -313,21 +403,36 @@ $(document).on('click', '.entryList', function() {
     var allEmails = [];
     getEntry(entryId).then(function(res) {
         $('.editButton').remove();
-        $('.leftSideButtons').append('<i class="fa fa-edit fa-2x editButton"></i>');
         $('.app__contentRight').empty();
-        $('.app__contentRight').append(
-            '<div class="entryInfo">' +
-            '<p>First Name: ' + res.firstName + '</p>' +
-            '<p>Last Name: ' + res.lastName + '</p>' +
-            '<p>Birthday: ' + res.birthday.substring(0, 10) + '</p>' +
-            '</div>' +
-            '<div class="entryPhone"></div>' +
-            '' +
-            '<div class="entryEmail"></div>' +
-            '' +
-            '<div class="entryAddress"></div>' +
-            ''
-        );
+        if (res.birthday) {
+            $('.app__contentRight').append(
+                '<div class="entryInfo">' +
+                '<p>First Name: ' + res.firstName + '</p>' +
+                '<p>Last Name: ' + res.lastName + '</p>' +
+                '<p>Birthday: ' + res.birthday.substring(0, 10) + '</p>' +
+                '</div>' +
+                '<div class="entryPhone"></div>' +
+                '' +
+                '<div class="entryEmail"></div>' +
+                '' +
+                '<div class="entryAddress"></div>' +
+                ''
+            );
+        }
+        else {
+            $('.app__contentRight').append(
+                '<div class="entryInfo">' +
+                '<p>First Name: ' + res.firstName + '</p>' +
+                '<p>Last Name: ' + res.lastName + '</p>' +
+                '</div>' +
+                '<div class="entryPhone"></div>' +
+                '' +
+                '<div class="entryEmail"></div>' +
+                '' +
+                '<div class="entryAddress"></div>' +
+                ''
+            );
+        }
         //Loop over the addresses array from our entry
         //Take each address object and filter it
         res.addresses.forEach(function(address) {
@@ -350,7 +455,7 @@ $(document).on('click', '.entryList', function() {
         //Display results
         allAddresses.forEach(function(address) {
             $('.entryAddress').append(
-                '<div data-id="'+address.id+'"class="toggleAddress" id="' + id + '"><h2>' + address.type.charAt(0).toUpperCase() + address.type.substring(1) + ' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
+                '<div data-id="' + address.id + '"class="toggleAddress" id="' + id + '"><h2>' + address.type.charAt(0).toUpperCase() + address.type.substring(1) + ' Address <i class="fa fa-arrow-circle-down"></i><span>Click to expand</span></h2></div>'
             )
             for (var prop in address) {
                 $('.entryAddress').find('#' + id + '').append(
@@ -365,14 +470,14 @@ $(document).on('click', '.entryList', function() {
             var phoneSubtype = phone.phoneType.charAt(0).toUpperCase() + phone.phoneType.substring(1)
             var phoneNumber = phone.phoneNumber;
             if (phone) {
-                $('.entryPhone').append('<p data-id="'+phone.id+'">' + phoneType + ' (' + phoneSubtype + '): ' + phoneNumber + '</p>')
+                $('.entryPhone').append('<p data-id="' + phone.id + '">' + phoneType + ' (' + phoneSubtype + '): ' + phoneNumber + '</p>')
             }
         })
         res.emails.forEach(function(email) {
             var emailType = email.type.charAt(0).toUpperCase() + email.type.substring(1);
             var emailAddress = email.email
             if (email) {
-                $('.entryEmail').append('<p data-id="'+email.id+'">' + emailType + ' Email: ' + emailAddress + '</p>')
+                $('.entryEmail').append('<p data-id="' + email.id + '">' + emailType + ' Email: ' + emailAddress + '</p>')
             }
         })
 

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fade In</title>
+
+    <style type="text/css">
+
+    </style>
+
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li id="item1" class="hidden">33</li>
+            <li id="item2" class="hidden">22</li>
+            <li id="item3" class="hidden">11</li>
+        </ul>
+    </nav>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var number = "33"
+            var elements = $('li');
+            var replacement = "1-855-Factor-1"
+            
+            $.each(elements, function() {
+                
+                if ($(this).is(':contains("' + number + '")')) {
+                    console.log($(this));
+                    $(this).html(function () {
+                        return $(this).html().replace(number, replacement)
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
